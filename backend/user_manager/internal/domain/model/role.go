@@ -7,9 +7,3 @@ type Role struct {
 	RoleName    string        `gorm:"type:varchar(255)"`
 	Permissions []*Permission `gorm:"many2many:role_permissions"`
 }
-
-type Permission struct {
-	gorm.Model
-	PermissionName string  `gorm:"type:varchar(255)"`
-	Roles          []*Role `gorm:"many2many:role_permissions"`
-}
