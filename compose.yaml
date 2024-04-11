@@ -6,9 +6,9 @@ services:
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     container_name: postgres
     restart: always
     networks:
@@ -27,18 +27,22 @@ services:
     container_name: next-app
     restart: always
     depends_on:
-      - backend-user-manage
+      - backend-user-manager
     networks:
       - frontend-network
-  backend-user-manage:
+  backend-user-manager:
     build:
       context: .
-      dockerfile: ./backend/user_manage/Dockerfile
+      dockerfile: ./backend/user_manager/Dockerfile
     ports:
       - "8081:8080"
     environment:
-      GO_ENV: ${GO_ENV}
-    container_name: user-manage-api
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: db
+      DB_PORT: 5432
+    container_name: user-manager-api
     restart: always
     depends_on:
       - db
