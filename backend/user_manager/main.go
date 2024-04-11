@@ -1,9 +1,7 @@
 package main
 
-import (
-	"fmt"
-)
+import cmd "github.com/kosuke9809/SyncMate/internal/cmd/api"
 
 func main() {
-	fmt.Println("Hello, World!")
+	cmd.ApiServerStart()
 }
