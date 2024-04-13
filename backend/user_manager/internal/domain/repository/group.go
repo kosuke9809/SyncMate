@@ -5,7 +5,7 @@ import (
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
 )
 
-type GroupRepository interface {
+type IGroupRepository interface {
 	Create(group *model.Group) (*model.Group, error)
 	Update(group *model.Group) (*model.Group, error)
 	Delete(id uuid.UUID) error

@@ -5,7 +5,7 @@ import (
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
 )
 
-type UserRepository interface {
+type IUserRepository interface {
 	Create(user *model.User) error
 	Update(user *model.User) error
 	Delete(id uuid.UUID) error
@@ -15,7 +15,7 @@ type UserRepository interface {
 	GetAll() ([]*model.User, error)
 }
 
-type UserGroupRepository interface {
+type IUserGroupRepository interface {
 	AddUserToGroup(userId uuid.UUID, groupId uuid.UUID, roleId uint) error
 	RemoveUserFromGroup(userId uuid.UUID, groupId uuid.UUID) error
 	GetGroupsByUserId(userId uuid.UUID) ([]*model.Group, error)

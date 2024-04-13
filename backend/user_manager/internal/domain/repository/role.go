@@ -2,7 +2,7 @@ package repository
 
 import "github.com/kosuke9809/SyncMate/internal/domain/model"
 
-type RoleRepository interface {
+type IRoleRepository interface {
 	Create(role *model.Role) (*model.Role, error)
 	Update(role *model.Role) (*model.Role, error)
 	Delete(id int) error
@@ -11,7 +11,7 @@ type RoleRepository interface {
 	GetAll() ([]*model.Role, error)
 }
 
-type RolePermissionRepository interface {
+type IRolePermissionRepository interface {
 	AddPermissionToRole(roleId int, permissionId int) error
 	RemovePermissionFromRole(roleId int, permissionId int) error
 	GetRolePermissions(roleId int) ([]*model.Permission, error)
