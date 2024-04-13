@@ -9,7 +9,7 @@ type GroupRepository interface {
 	Create(group *model.Group) (*model.Group, error)
 	Update(group *model.Group) (*model.Group, error)
 	Delete(id uuid.UUID) error
+	FindById(id uuid.UUID) (*model.Group, error)
+	FindByName(name string) (*model.Group, error)
 	GetAll() ([]*model.Group, error)
-	GetById(id uuid.UUID) (*model.Group, error)
-	GetByName(name string) (*model.Group, error)
 }

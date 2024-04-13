@@ -9,15 +9,15 @@ type UserRepository interface {
 	Create(user *model.User) error
 	Update(user *model.User) error
 	Delete(id uuid.UUID) error
-	GetByEmail(email string) (*model.User, error)
-	GetByID(id uuid.UUID) (*model.User, error)
+	FindByEmail(email string) (*model.User, error)
+	FindById(id uuid.UUID) (*model.User, error)
+	FindProfileById(userId uuid.UUID) (*model.Profile, error)
 	GetAll() ([]*model.User, error)
-	GetProfileByID(userID uuid.UUID) (*model.Profile, error)
 }
 
 type UserGroupRepository interface {
-	GetGroupsByUserID(userID uuid.UUID) ([]*model.Group, error)
-	AddUserToGroup(userID uuid.UUID, groupID uuid.UUID, roleID uint) error
-	RemoveUserFromGroup(userID uuid.UUID, groupID uuid.UUID) error
-	GetGroupMembers(groupID uuid.UUID) ([]*model.User, error)
+	AddUserToGroup(userId uuid.UUID, groupId uuid.UUID, roleId uint) error
+	RemoveUserFromGroup(userId uuid.UUID, groupId uuid.UUID) error
+	GetGroupsByUserId(userId uuid.UUID) ([]*model.Group, error)
+	GetGroupMembers(groupId uuid.UUID) ([]*model.User, error)
 }

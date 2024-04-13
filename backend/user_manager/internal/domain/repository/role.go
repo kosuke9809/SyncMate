@@ -6,13 +6,13 @@ type RoleRepository interface {
 	Create(role *model.Role) (*model.Role, error)
 	Update(role *model.Role) (*model.Role, error)
 	Delete(id int) error
-	GetById(id int) (*model.Role, error)
-	GetByName(name string) (*model.Role, error)
+	FindById(id int) (*model.Role, error)
+	FindByName(name string) (*model.Role, error)
 	GetAll() ([]*model.Role, error)
 }
 
 type RolePermissionRepository interface {
-	AddPermissionToRole(roleID int, permissionID int) error
-	RemovePermissionFromRole(roleID int, permissionID int) error
-	GetRolePermissions(roleID int) ([]*model.Permission, error)
+	AddPermissionToRole(roleId int, permissionId int) error
+	RemovePermissionFromRole(roleId int, permissionId int) error
+	GetRolePermissions(roleId int) ([]*model.Permission, error)
 }
