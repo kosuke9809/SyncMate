@@ -27,13 +27,13 @@ services:
     container_name: next-app
     restart: always
     depends_on:
-      - backend-user-manager
+      - backend-user-management-service
     networks:
       - frontend-network
-  backend-user-manager:
+  backend-user-management-service:
     build:
       context: .
-      dockerfile: ./backend/user_manager/Dockerfile
+      dockerfile: ./backend/user_management_service/Dockerfile
     ports:
       - "8081:8080"
     environment:
@@ -43,7 +43,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       FRONTEND_URL: ${FRONTEND_URL}
-    container_name: user-manager-api
+    container_name: user-management-service-api
     restart: always
     depends_on:
       - db
