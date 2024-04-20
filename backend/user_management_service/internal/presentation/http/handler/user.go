@@ -13,6 +13,8 @@ type IUserHandler interface {
 	SignUp(ctx echo.Context) error
 	SignIn(ctx echo.Context) error
 	RefreshAccessToken(ctx echo.Context) error
+	RequestPasswordReset(ctx echo.Context) error
+	ResetPassword(ctx echo.Context) error
 }
 
 type userHandler struct {
@@ -33,7 +35,7 @@ func (uh *userHandler) SignUp(ctx echo.Context) error {
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to sign up"})
 	}
-	return ctx.JSON(http.StatusOK, res)
+	return ctx.JSON(http.StatusCreated, res)
 }
 
 func (uh *userHandler) SignIn(ctx echo.Context) error {
@@ -89,4 +91,34 @@ func (uh *userHandler) RefreshAccessToken(ctx echo.Context) error {
 		SameSite: http.SameSiteStrictMode,
 	})
 	return ctx.JSON(http.StatusOK, map[string]string{"message": "Access token refreshed successfully"})
+}
+
+func (uh *userHandler) RequestPasswordReset(ctx echo.Context) error {
+	var req struct {
+		Email string `json:"email"`
+	}
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
+	}
+
+	token, err := uh.uu.RequestPasswordReset(req.Email)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to request password reset"})
+	}
+	return ctx.JSON(http.StatusOK, map[string]string{"token": token})
+}
+
+func (uh *userHandler) ResetPassword(ctx echo.Context) error {
+	var req struct {
+		Token       string `json:"token"`
+		NewPassword string `json:"new_password"`
+	}
+	if err := ctx.Bind(&req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
+	}
+
+	if err := uh.uu.ResetPassword(req.Token, req.NewPassword); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to reset password"})
+	}
+	return ctx.JSON(http.StatusOK, map[string]string{"message": "Password reset successfully"})
 }
