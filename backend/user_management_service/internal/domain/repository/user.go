@@ -11,7 +11,8 @@ type IUserRepository interface {
 	Delete(id uuid.UUID) error
 	FindByEmail(email string) (*model.User, error)
 	FindById(id uuid.UUID) (*model.User, error)
-	FindProfileById(userId uuid.UUID) (*model.Profile, error)
+	FindProfileById(id uuid.UUID) (*model.Profile, error)
+	FindByPasswordResetToken(token string) (*model.User, error)
 	GetAll() ([]*model.User, error)
 }
 
@@ -19,5 +20,5 @@ type IUserGroupRepository interface {
 	AddUserToGroup(userId uuid.UUID, groupId uuid.UUID, roleId uint) error
 	RemoveUserFromGroup(userId uuid.UUID, groupId uuid.UUID) error
 	GetGroupsByUserId(userId uuid.UUID) ([]*model.Group, error)
-	GetGroupMembers(groupId uuid.UUID) ([]*model.User, error)
+	FindUserGroupRole(userId uuid.UUID, groupId uuid.UUID) (*model.Role, error)
 }
