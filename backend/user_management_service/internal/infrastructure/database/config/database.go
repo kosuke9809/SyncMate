@@ -14,7 +14,7 @@ func NewDBWithRetry(maxAttempts int, initialBackoff time.Duration) (*gorm.DB, er
 	var db *gorm.DB
 	var err error
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo charset=UTF8", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"))
 
 	for attempt := 1; attempt <= maxAttempts; attempt++ {
 		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
