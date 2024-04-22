@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ApiServerStart() {
+func Start() {
 	fmt.Println("Starting the server")
 	db, err := database.NewDBWithRetry(5, 5*time.Second)
 	if err != nil {
