@@ -10,9 +10,3 @@ type IRoleRepository interface {
 	FindByName(name string) (*model.Role, error)
 	GetAll() ([]*model.Role, error)
 }
-
-type IRolePermissionRepository interface {
-	AddPermissionToRole(roleId int, permissionId int) error
-	RemovePermissionFromRole(roleId int, permissionId int) error
-	GetRolePermissions(roleId int) ([]*model.Permission, error)
-}
