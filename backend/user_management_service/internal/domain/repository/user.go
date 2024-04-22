@@ -15,10 +15,3 @@ type IUserRepository interface {
 	FindByPasswordResetToken(token string) (*model.User, error)
 	GetAll() ([]*model.User, error)
 }
-
-type IUserGroupRepository interface {
-	AddUserToGroup(userId uuid.UUID, groupId uuid.UUID, roleId uint) error
-	RemoveUserFromGroup(userId uuid.UUID, groupId uuid.UUID) error
-	GetGroupsByUserId(userId uuid.UUID) ([]*model.Group, error)
-	FindUserGroupRole(userId uuid.UUID, groupId uuid.UUID) (*model.Role, error)
-}

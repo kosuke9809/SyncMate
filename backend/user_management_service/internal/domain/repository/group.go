@@ -13,8 +13,3 @@ type IGroupRepository interface {
 	FindByName(name string) (*model.Group, error)
 	GetAll() ([]*model.Group, error)
 }
-
-type IGroupUserRepository interface {
-	GetMembersByGroupId(groupId uuid.UUID) ([]*model.User, error)
-	FindGroupOwner(groupId uuid.UUID) (*model.User, error)
-}

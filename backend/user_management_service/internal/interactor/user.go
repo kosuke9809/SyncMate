@@ -3,7 +3,7 @@ package interactor
 import (
 	"github.com/kosuke9809/SyncMate/internal/domain/repository"
 	"github.com/kosuke9809/SyncMate/internal/domain/service"
-	"github.com/kosuke9809/SyncMate/internal/infrastructure/database/persistence"
+	"github.com/kosuke9809/SyncMate/internal/infrastructure/persistence"
 	"github.com/kosuke9809/SyncMate/internal/presentation/http/handler"
 	"github.com/kosuke9809/SyncMate/internal/usecase"
 	"gorm.io/gorm"

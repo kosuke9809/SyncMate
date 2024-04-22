@@ -18,15 +18,6 @@ type User struct {
 	UpdatedAt            time.Time
 }
 
-type UserGroup struct {
-	UserID  uuid.UUID `gorm:"type:uuid;primary_key;"`
-	GroupID uuid.UUID `gorm:"type:int;primary_key;"`
-	RoleID  uint
-	User    User  `gorm:"foreignKey:UserID;"`
-	Group   Group `gorm:"foreignKey:GroupID;"`
-	Role    Role  `gorm:"foreignKey:RoleID;"`
-}
-
 type UserResponse struct {
 	ID       uuid.UUID `json:"id"`
 	Username string    `json:"username"`
