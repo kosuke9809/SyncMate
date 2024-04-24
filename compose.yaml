@@ -34,6 +34,8 @@ services:
       dockerfile: ./backend/user_management_service/Dockerfile
     ports:
       - "8081:8080"
+    volumes:
+      - ./backend/user_management_service:/api
     env_file:
       - ./backend/user_management_service/.env
     container_name: user-management-service-api
