@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	database "github.com/kosuke9809/SyncMate/internal/infrastructure/database/config"
+	database "github.com/kosuke9809/SyncMate/internal/infrastructure/database/postgres"
 	"github.com/kosuke9809/SyncMate/internal/interactor"
 	"github.com/kosuke9809/SyncMate/internal/presentation/http/middleware"
 	"github.com/kosuke9809/SyncMate/internal/presentation/http/router"

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
-	database "github.com/kosuke9809/SyncMate/internal/infrastructure/database/config"
+	database "github.com/kosuke9809/SyncMate/internal/infrastructure/database/postgres"
 )
 
 func AutoMigrate() {
