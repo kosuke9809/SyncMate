@@ -44,7 +44,7 @@ func (up *userPersistence) FindByEmail(email string) (*model.User, error) {
 	return &user, nil
 }
 
-func (up *userPersistence) FindById(id uuid.UUID) (*model.User, error) {
+func (up *userPersistence) FindByID(id uuid.UUID) (*model.User, error) {
 	user := model.User{}
 	if err := up.db.Where("id = ?", id).First(&user).Error; err != nil {
 		return nil, err
@@ -52,9 +52,9 @@ func (up *userPersistence) FindById(id uuid.UUID) (*model.User, error) {
 	return &user, nil
 }
 
-func (up *userPersistence) FindProfileById(userId uuid.UUID) (*model.Profile, error) {
+func (up *userPersistence) FindProfileByID(userID uuid.UUID) (*model.Profile, error) {
 	profile := model.Profile{}
-	if err := up.db.Where("user_id = ?", userId).First(&profile).Error; err != nil {
+	if err := up.db.Where("user_id = ?", userID).First(&profile).Error; err != nil {
 		return nil, err
 	}
 	return &profile, nil
