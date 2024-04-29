@@ -6,4 +6,5 @@ type Role struct {
 	gorm.Model
 	RoleName    string        `gorm:"type:varchar(255)"`
 	Permissions []*Permission `gorm:"many2many:role_permissions"`
+	Admin       bool          `gorm:"type:boolean"`
 }
