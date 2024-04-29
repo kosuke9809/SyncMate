@@ -6,6 +6,6 @@ type IProfileRepository interface {
 	Create(profile *model.Profile) error
 	Update(profile *model.Profile) error
 	Delte(id uint) error
-	FindById(id uint) (*model.Profile, error)
-	FindByUserId(userId uint) (*model.Profile, error)
+	FindByID(id uint) (*model.Profile, error)
+	FindByUserID(userID uint) (*model.Profile, error)
 }

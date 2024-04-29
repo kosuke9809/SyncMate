@@ -6,10 +6,10 @@ import (
 )
 
 type IUserGroupRepository interface {
-	AddUserToGroup(userId uuid.UUID, groupId uuid.UUID, roleId uint) error
-	RemoveUserFromGroup(userId uuid.UUID, groupId uuid.UUID) error
-	GetGroupsByUserId(userId uuid.UUID) ([]*model.Group, error)
-	FindUserGroupRole(userId uuid.UUID, groupId uuid.UUID) (*model.Role, error)
-	GetMembersByGroupId(groupId uuid.UUID) ([]*model.User, error)
-	FindGroupOwner(groupId uuid.UUID) (*model.User, error)
+	AddUserToGroup(userID uuid.UUID, groupID uuid.UUID, roleID uint) error
+	RemoveUserFromGroup(userID uuid.UUID, groupID uuid.UUID) error
+	GetGroupsByUserID(userID uuid.UUID) ([]*model.Group, error)
+	FindUserGroupRole(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error)
+	GetMembersByGroupID(groupID uuid.UUID) ([]*model.User, error)
+	FindGroupOwner(groupID uuid.UUID) (*model.User, error)
 }

@@ -8,6 +8,7 @@ type IPermissionRepository interface {
 	Create(permission *model.Permission) (*model.Permission, error)
 	Update(permission *model.Permission) (*model.Permission, error)
 	Delete(id uint) error
-	FindById(id uint) (*model.Permission, error)
+	FindByID(id uint) (*model.Permission, error)
+	FindByName(name string) (*model.Permission, error)
 	GetAll() ([]*model.Permission, error)
 }
