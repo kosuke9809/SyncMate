@@ -22,9 +22,9 @@ func init() {
 	secretKey = []byte(secretKeyString)
 }
 
-func GenerateToken(userId string, durationInMinutes time.Duration) (string, error) {
+func GenerateToken(userID string, durationInMinutes time.Duration) (string, error) {
 	claims := Claims{
-		UserID: userId,
+		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(durationInMinutes * time.Minute)),
 		},
