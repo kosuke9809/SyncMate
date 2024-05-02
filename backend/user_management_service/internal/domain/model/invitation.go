@@ -7,7 +7,7 @@ import (
 )
 
 type Invitation struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey;)"`
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey;"`
 	GroupID   uuid.UUID `gorm:"type:uuid;not null"`
 	InviterID uuid.UUID `gorm:"type:uuid;not null"`
 	InviteeID uuid.UUID `gorm:"type:uuid;not null"`
