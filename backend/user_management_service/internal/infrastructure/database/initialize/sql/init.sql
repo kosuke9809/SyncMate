@@ -9,7 +9,7 @@ INSERT INTO permissions (permission_name)
 VALUES 
     ('ManageSystem'),
     ('ManageGroup'),
-    ('ManageMembers'),
+    ('ManageGroupMembers'),
     ('ManageRoles'),
     ('CreateContent'),
     ('EditContent'),
@@ -23,7 +23,7 @@ VALUES
     -- SysAdmin
     (1, 1), -- ManageSystem
     (1, 2), -- ManageGroup
-    (1, 3), -- ManageMembers
+    (1, 3), -- ManageGroupMembers
     (1, 4), -- ManageRoles
     (1, 5), -- CreateContent
     (1, 6), -- EditContent
@@ -34,7 +34,7 @@ VALUES
 
     -- Owner
     (2, 2), -- ManageGroup
-    (2, 3), -- ManageMembers
+    (2, 3), -- ManageGroupMembers
     (2, 4), -- ManageRoles
     (2, 5), -- CreateContent
     (2, 6), -- EditContent
@@ -44,7 +44,7 @@ VALUES
     (2, 10), -- ShareContent
 
     -- Manager
-    (3, 3), -- ManageMembers
+    (3, 3), -- ManageGroupMembers
     (3, 5), -- CreateContent
     (3, 6), -- EditContent
     (3, 7), -- DeleteContent
