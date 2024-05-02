@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"time"
+
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
 	"github.com/kosuke9809/SyncMate/internal/domain/repository"
 	"gorm.io/gorm"
@@ -15,6 +17,8 @@ func NewRolePersistence(db *gorm.DB) repository.IRoleRepository {
 }
 
 func (rp rolePersistence) Create(role *model.Role) (*model.Role, error) {
+	role.CreatedAt = time.Now()
+	role.UpdatedAt = time.Now()
 	if err := rp.db.Create(role).Error; err != nil {
 		return nil, err
 	}
@@ -22,6 +26,7 @@ func (rp rolePersistence) Create(role *model.Role) (*model.Role, error) {
 }
 
 func (rp rolePersistence) Update(role *model.Role) (*model.Role, error) {
+	role.UpdatedAt = time.Now()
 	if err := rp.db.Save(role).Error; err != nil {
 		return nil, err
 	}

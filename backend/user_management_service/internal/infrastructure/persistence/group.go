@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
 	"github.com/kosuke9809/SyncMate/internal/domain/repository"
@@ -16,6 +18,8 @@ func NewGroupPersistence(db *gorm.DB) repository.IGroupRepository {
 }
 
 func (gp *groupPersistence) Create(group *model.Group) (*model.Group, error) {
+	group.CreatedAt = time.Now()
+	group.UpdatedAt = time.Now()
 	if err := gp.db.Create(group).Error; err != nil {
 		return nil, err
 	}
@@ -23,6 +27,7 @@ func (gp *groupPersistence) Create(group *model.Group) (*model.Group, error) {
 }
 
 func (gp *groupPersistence) Update(group *model.Group) (*model.Group, error) {
+	group.UpdatedAt = time.Now()
 	if err := gp.db.Save(group).Error; err != nil {
 		return nil, err
 	}

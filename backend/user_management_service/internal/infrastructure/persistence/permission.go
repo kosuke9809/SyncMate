@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"time"
+
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
 	"github.com/kosuke9809/SyncMate/internal/domain/repository"
 	"gorm.io/gorm"
@@ -15,6 +17,8 @@ func NewPermissionPersistence(db *gorm.DB) repository.IPermissionRepository {
 }
 
 func (pp *permissionPersistence) Create(permission *model.Permission) (*model.Permission, error) {
+	permission.CreatedAt = time.Now()
+	permission.UpdatedAt = time.Now()
 	if err := pp.db.Create(permission).Error; err != nil {
 		return nil, err
 	}
@@ -22,6 +26,7 @@ func (pp *permissionPersistence) Create(permission *model.Permission) (*model.Pe
 }
 
 func (pp *permissionPersistence) Update(permission *model.Permission) (*model.Permission, error) {
+	permission.UpdatedAt = time.Now()
 	if err := pp.db.Save(permission).Error; err != nil {
 		return nil, err
 	}
