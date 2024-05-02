@@ -16,6 +16,7 @@ type IUserService interface {
 	Authenticate(email, password string) (*model.User, error)
 	GeneratePasswordResetToken(email string) (string, error)
 	ResetPassword(token, newPassword string) error
+	FindByEmail(email string) (*model.User, error)
 }
 
 type userService struct {
@@ -101,4 +102,8 @@ func (us *userService) ResetPassword(token, newPassword string) error {
 		return err
 	}
 	return nil
+}
+
+func (us *userService) FindByEmail(email string) (*model.User, error) {
+	return us.ur.FindByEmail(email)
 }

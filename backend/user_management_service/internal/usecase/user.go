@@ -18,7 +18,7 @@ type userUsecase struct {
 	us service.IUserService
 }
 
-func NewUserUsecase(us service.IUserService) *userUsecase {
+func NewUserUsecase(us service.IUserService) IUserUsecase {
 	return &userUsecase{us}
 }
 

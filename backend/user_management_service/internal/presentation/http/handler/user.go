@@ -39,12 +39,12 @@ func NewUserHandler(uu usecase.IUserUsecase) IUserHandler {
 func (uh *userHandler) SignUp(ctx echo.Context) error {
 	user := model.User{}
 	if err := ctx.Bind(&user); err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
 
 	res, err := uh.uu.SignUp(user)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to sign up"})
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to sign up")
 	}
 	return ctx.JSON(http.StatusCreated, res)
 }
@@ -63,12 +63,12 @@ func (uh *userHandler) SignUp(ctx echo.Context) error {
 func (uh *userHandler) SignIn(ctx echo.Context) error {
 	user := model.User{}
 	if err := ctx.Bind(&user); err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
 
 	accessToken, refreshToken, err := uh.uu.SignIn(user)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to sign in"})
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to sign in")
 	}
 
 	ctx.SetCookie(&http.Cookie{
@@ -104,11 +104,11 @@ func (uh *userHandler) SignIn(ctx echo.Context) error {
 func (uh *userHandler) RefreshAccessToken(ctx echo.Context) error {
 	refreshToken, err := ctx.Cookie("RefreshToken")
 	if err != nil || refreshToken.Value == "" {
-		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Refresh token is required"})
+		return echo.NewHTTPError(http.StatusUnauthorized, map[string]string{"error": "Refresh token is required"})
 	}
 	newAccessToken, err := uh.uu.RefreshAccessToken(refreshToken.Value)
 	if err != nil {
-		return ctx.JSON(http.StatusUnauthorized, map[string]string{"error": "Failed to refresh access token"})
+		return echo.NewHTTPError(http.StatusUnauthorized, map[string]string{"error": "Failed to refresh access token"})
 	}
 
 	ctx.SetCookie(&http.Cookie{
@@ -138,12 +138,12 @@ func (uh *userHandler) RequestPasswordReset(ctx echo.Context) error {
 		Email string `json:"email"`
 	}
 	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
 
 	token, err := uh.uu.RequestPasswordReset(req.Email)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to request password reset"})
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to request password reset")
 	}
 	return ctx.JSON(http.StatusOK, map[string]string{"token": token})
 }
@@ -163,11 +163,11 @@ func (uh *userHandler) ResetPassword(ctx echo.Context) error {
 		NewPassword string `json:"new_password"`
 	}
 	if err := ctx.Bind(&req); err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request data"})
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
 
 	if err := uh.uu.ResetPassword(req.Token, req.NewPassword); err != nil {
-		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to reset password"})
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to reset password")
 	}
 	return ctx.JSON(http.StatusOK, map[string]string{"message": "Password reset successfully"})
 }

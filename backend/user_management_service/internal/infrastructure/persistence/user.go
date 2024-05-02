@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/kosuke9809/SyncMate/internal/domain/model"
 	"github.com/kosuke9809/SyncMate/internal/domain/repository"
@@ -16,6 +18,8 @@ func NewUserPersistence(db *gorm.DB) repository.IUserRepository {
 }
 
 func (up *userPersistence) Create(user *model.User) error {
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 	if err := up.db.Create(user).Error; err != nil {
 		return err
 	}
@@ -23,6 +27,7 @@ func (up *userPersistence) Create(user *model.User) error {
 }
 
 func (up *userPersistence) Update(user *model.User) error {
+	user.UpdatedAt = time.Now()
 	if err := up.db.Save(user).Error; err != nil {
 		return err
 	}
