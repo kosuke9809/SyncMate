@@ -12,6 +12,9 @@ type IGroupService interface {
 	CreateGroup(groupName, description string) (*model.Group, error)
 	UpdateGroup(id uuid.UUID, groupName, description string) (*model.Group, error)
 	DeleteGroup(id uuid.UUID) error
+	FindByID(id uuid.UUID) (*model.Group, error)
+	FindByName(name string) (*model.Group, error)
+	GetAllGroups() ([]*model.Group, error)
 }
 
 type groupService struct {
@@ -27,10 +30,7 @@ func (gs *groupService) CreateGroup(groupName, description string) (*model.Group
 		ID:          uuid.New(),
 		GroupName:   groupName,
 		Description: description,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
 	}
-
 	newGroup, err := gs.gr.Create(group)
 	if err != nil {
 		return nil, err
@@ -72,4 +72,16 @@ func (gs *groupService) DeleteGroup(id uuid.UUID) error {
 		return err
 	}
 	return nil
+}
+
+func (gs *groupService) FindByID(id uuid.UUID) (*model.Group, error) {
+	return gs.gr.FindByID(id)
+}
+
+func (gs *groupService) FindByName(name string) (*model.Group, error) {
+	return gs.gr.FindByName(name)
+}
+
+func (gs *groupService) GetAllGroups() ([]*model.Group, error) {
+	return gs.gr.GetAll()
 }

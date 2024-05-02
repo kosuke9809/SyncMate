@@ -10,9 +10,10 @@ type IUserGroupService interface {
 	AddUserToGroup(userID uuid.UUID, groupID uuid.UUID, roleID uint) error
 	RemoveUserFromGroup(userID uuid.UUID, groupID uuid.UUID) error
 	GetGroupsByUserID(userID uuid.UUID) ([]*model.Group, error)
-	FindUserGroupRole(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error)
+	FindUserRoleInGroup(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error)
 	GetMembersByGroupID(groupID uuid.UUID) ([]*model.User, error)
 	FindGroupOwner(groupID uuid.UUID) (*model.User, error)
+	IsUserInGroup(userID uuid.UUID, groupID uuid.UUID) (bool, error)
 }
 
 type userGroupService struct {
@@ -35,8 +36,8 @@ func (ugs *userGroupService) GetGroupsByUserID(userID uuid.UUID) ([]*model.Group
 	return ugs.ugr.GetGroupsByUserID(userID)
 }
 
-func (ugs *userGroupService) FindUserGroupRole(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error) {
-	return ugs.ugr.FindUserGroupRole(userID, groupID)
+func (ugs *userGroupService) FindUserRoleInGroup(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error) {
+	return ugs.ugr.FindUserRoleInGroup(userID, groupID)
 }
 
 func (ugs *userGroupService) GetMembersByGroupID(groupID uuid.UUID) ([]*model.User, error) {
@@ -45,4 +46,8 @@ func (ugs *userGroupService) GetMembersByGroupID(groupID uuid.UUID) ([]*model.Us
 
 func (ugs *userGroupService) FindGroupOwner(groupID uuid.UUID) (*model.User, error) {
 	return ugs.ugr.FindGroupOwner(groupID)
+}
+
+func (ugs *userGroupService) IsUserInGroup(userID, groupID uuid.UUID) (bool, error) {
+	return ugs.ugr.IsUserInGroup(userID, groupID)
 }

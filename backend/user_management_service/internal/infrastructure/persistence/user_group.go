@@ -42,7 +42,7 @@ func (ugp *userGroupPersistence) GetGroupsByUserID(userID uuid.UUID) ([]*model.G
 	return groups, nil
 }
 
-func (ugp *userGroupPersistence) FindUserGroupRole(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error) {
+func (ugp *userGroupPersistence) FindUserRoleInGroup(userID uuid.UUID, groupID uuid.UUID) (*model.Role, error) {
 	role := model.Role{}
 	if err := ugp.db.Table("user_groups").Select("roles.*").Joins("JOIN roles ON user_groups.role_id = roles.id").Where("user_id = ? AND group_id = ?", userID, groupID).Scan(&role).Error; err != nil {
 		return nil, err
@@ -64,4 +64,15 @@ func (ugp *userGroupPersistence) FindGroupOwner(groupID uuid.UUID) (*model.User,
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (usp *userGroupPersistence) IsUserInGroup(userID, groupID uuid.UUID) (bool, error) {
+	var count int64
+	if err := usp.db.Model(&model.UserGroup{}).Where("user_id = ? AND group_id = ?", userID, groupID).Count(&count).Error; err != nil {
+		return false, err
+	}
+	if count > 0 {
+		return true, nil
+	}
+	return false, nil
 }
