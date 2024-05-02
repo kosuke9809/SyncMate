@@ -5,7 +5,7 @@ definitions:
         type: string
       description:
         type: string
-      groupName:
+      group_name:
         type: string
       id:
         type: string
@@ -15,6 +15,23 @@ definitions:
         items:
           $ref: '#/definitions/model.User'
         type: array
+    type: object
+  model.Invitation:
+    properties:
+      createdAt:
+        type: string
+      groupID:
+        type: string
+      id:
+        type: string
+      inviteeID:
+        type: string
+      inviterID:
+        type: string
+      status:
+        type: string
+      updatedAt:
+        type: string
     type: object
   model.User:
     properties:
@@ -34,6 +51,14 @@ definitions:
         type: string
       passwordResetExpires:
         type: string
+      receivedInvitations:
+        items:
+          $ref: '#/definitions/model.Invitation'
+        type: array
+      sentInvitations:
+        items:
+          $ref: '#/definitions/model.Invitation'
+        type: array
       updatedAt:
         type: string
       username:
@@ -42,6 +67,178 @@ definitions:
 info:
   contact: {}
 paths:
+  /groups:
+    post:
+      consumes:
+      - application/json
+      description: Create a new group with the provided details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Group'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new group
+      tags:
+      - Group
+  /groups/invitations/{invitationID}/accept:
+    post:
+      consumes:
+      - application/json
+      description: Accept a pending group invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: invitationID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Accept a group invitation
+      tags:
+      - Group
+  /groups/invitations/{invitationID}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancel a pending group invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: invitationID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cancel a group invitation
+      tags:
+      - Group
+  /groups/invitations/{invitationID}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Reject a pending group invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: invitationID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reject a group invitation
+      tags:
+      - Group
+  /groups/invite:
+    post:
+      consumes:
+      - application/json
+      description: Invite a user to a group by email
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Invitation'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Invite a user to a group
+      tags:
+      - Group
+  /groups/users/remove:
+    post:
+      consumes:
+      - application/json
+      description: Remove a user from a group
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Remove a user from a group
+      tags:
+      - Group
   /users/refresh:
     post:
       description: Generate a new access token using a refresh token
