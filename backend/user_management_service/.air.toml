@@ -1,0 +1,46 @@
+# air.toml
+
+# 監視対象のディレクトリ
+root = "."
+
+# 監視対象のファイル拡張子
+tmp_dir = "tmp"
+
+[build]
+# ビルドコマンド
+cmd = "go build -o ./tmp/main ."
+
+# バイナリファイル実行時のコマンド
+bin = "tmp/main"
+
+# ビルド前に実行するコマンド
+full_bin = "APP_ENV=dev APP_USER=air ./tmp/main"
+
+# ビルドを除外するディレクトリ
+exclude_dir = ["tmp"]
+
+# ビルド時に無視するファイル
+exclude_file = []
+
+# 監視対象に含めるファイル
+include_file = []
+
+# ビルドの遅延時間（ms）
+delay = 1000
+
+# 停止前に待機する時間（ms）
+kill_delay = 500
+
+# 再起動時にログをクリアするかどうか
+log = "build-errors.log"
+
+[color]
+# ログの色設定
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+# 隠しファイルを監視対象に含めるかどうか
+clean_on_exit = true

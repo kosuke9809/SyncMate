@@ -4,11 +4,9 @@ services:
       context: .
       dockerfile: ./db/Dockerfile
     ports:
-      - "5433:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      - "5400:5432"
+    env_file:
+      - ./db/.env
     container_name: postgres
     restart: always
     networks:
@@ -18,27 +16,29 @@ services:
       context: .
       dockerfile: ./frontend/Dockerfile
     ports:
-      - 3001:3000
-    environment:
-      NEXT_ENV: ${NEXT_ENV}
+      - 3333:3000
+    env_file:
+      - ./frontend/.env
     volumes:
       - ./frontend:/app
       - /app/node_modules
     container_name: next-app
     restart: always
     depends_on:
-      - backend-user-manage
+      - backend-user-management-service
     networks:
       - frontend-network
-  backend-user-manage:
+  backend-user-management-service:
     build:
       context: .
-      dockerfile: ./backend/user_manage/Dockerfile
+      dockerfile: ./backend/user_management_service/Dockerfile
     ports:
-      - "8081:8080"
-    environment:
-      GO_ENV: ${GO_ENV}
-    container_name: user-manage-api
+      - "8001:8080"
+    volumes:
+      - ./backend/user_management_service:/api
+    env_file:
+      - ./backend/user_management_service/.env
+    container_name: user-management-service-api
     restart: always
     depends_on:
       - db
