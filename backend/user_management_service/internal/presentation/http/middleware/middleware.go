@@ -3,6 +3,7 @@ package middleware
 import (
 	"os"
 
+	echojwt "github.com/labstack/echo-jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -24,4 +25,15 @@ func NewMiddleware(e *echo.Echo) *echo.Echo {
 	// 	},
 	// ))
 	return e
+}
+
+func RequireJWTAuth(g *echo.Group) *echo.Group {
+	g.Use(echojwt.WithConfig(
+		echojwt.Config{
+			SigningKey:  []byte(os.Getenv("SECRET_KEY")),
+			TokenLookup: "header: Authorization",
+			ContextKey:  "user",
+		},
+	))
+	return g
 }

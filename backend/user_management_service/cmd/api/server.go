@@ -22,7 +22,8 @@ func Start() {
 	e := echo.New()
 	i := interactor.NewInteractor(db)
 	uh := i.NewUserHandler()
-	router.NewRouter(e, uh)
+	gh := i.NewGroupHandler()
+	router.NewRouter(e, uh, gh)
 	middleware.NewMiddleware(e)
 	if err := e.Start(":8080"); err != nil {
 		e.Logger.Fatal(err)
