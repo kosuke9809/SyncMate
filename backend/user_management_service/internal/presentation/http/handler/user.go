@@ -35,7 +35,7 @@ func NewUserHandler(uu usecase.IUserUsecase) IUserHandler {
 // @Success 201 {object} model.User
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /users/signup [post]
+// @Router /signup [post]
 func (uh *userHandler) SignUp(ctx echo.Context) error {
 	user := model.User{}
 	if err := ctx.Bind(&user); err != nil {
@@ -59,7 +59,7 @@ func (uh *userHandler) SignUp(ctx echo.Context) error {
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /users/signin [post]
+// @Router /signin [post]
 func (uh *userHandler) SignIn(ctx echo.Context) error {
 	user := model.User{}
 	if err := ctx.Bind(&user); err != nil {
@@ -100,7 +100,7 @@ func (uh *userHandler) SignIn(ctx echo.Context) error {
 // @Produce json
 // @Success 200 {object} map[string]string
 // @Failure 401 {object} map[string]string
-// @Router /users/refresh [post]
+// @Router /refresh [post]
 func (uh *userHandler) RefreshAccessToken(ctx echo.Context) error {
 	refreshToken, err := ctx.Cookie("RefreshToken")
 	if err != nil || refreshToken.Value == "" {
@@ -132,7 +132,7 @@ func (uh *userHandler) RefreshAccessToken(ctx echo.Context) error {
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /users/reset-password [post]
+// @Router /password/reset/request [post]
 func (uh *userHandler) RequestPasswordReset(ctx echo.Context) error {
 	var req struct {
 		Email string `json:"email"`
@@ -157,6 +157,7 @@ func (uh *userHandler) RequestPasswordReset(ctx echo.Context) error {
 // @Success 200 {object} map[string]string
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
+// @Router /password/reset [post]
 func (uh *userHandler) ResetPassword(ctx echo.Context) error {
 	var req struct {
 		Token       string `json:"token"`

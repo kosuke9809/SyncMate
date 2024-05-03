@@ -17,6 +17,9 @@ type IGroupHandler interface {
 	RejectInvitation(ctx echo.Context) error
 	CancelInvitation(ctx echo.Context) error
 	RemoveUserFromGroup(ctx echo.Context) error
+	GetGroupDetails(ctx echo.Context) error
+	GetGroupMembers(ctx echo.Context) error
+	DeleteGroup(ctx echo.Context) error
 }
 
 type groupHandler struct {
@@ -36,7 +39,7 @@ func NewGroupHandler(gu usecase.IGroupUsecase) IGroupHandler {
 // @Success 200 {object} model.Group
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /groups [post]
+// @Router /group/create [post]
 func (gh *groupHandler) CreateNewGroup(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.Claims)
@@ -67,7 +70,7 @@ func (gh *groupHandler) CreateNewGroup(ctx echo.Context) error {
 // @Success 200 {object} model.Invitation
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /groups/invite [post]
+// @Router /group/invite [post]
 func (gh *groupHandler) InviteUserToGroup(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.Claims)
@@ -99,7 +102,7 @@ func (gh *groupHandler) InviteUserToGroup(ctx echo.Context) error {
 // @Success 200
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /groups/invitations/{invitationID}/accept [post]
+// @Router /group/invitation/accept [post]
 func (gh *groupHandler) AcceptInvitation(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.Claims)
@@ -130,7 +133,7 @@ func (gh *groupHandler) AcceptInvitation(ctx echo.Context) error {
 // @Success 200
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /groups/invitations/{invitationID}/reject [post]
+// @Router /group/invitation/reject [post]
 func (gh *groupHandler) RejectInvitation(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.Claims)
@@ -161,7 +164,7 @@ func (gh *groupHandler) RejectInvitation(ctx echo.Context) error {
 // @Success 200
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /groups/invitations/{invitationID}/cancel [post]
+// @Router /grous/invitation/cancel [post]
 func (gh *groupHandler) CancelInvitation(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.Claims)
@@ -191,7 +194,7 @@ func (gh *groupHandler) CancelInvitation(ctx echo.Context) error {
 // @Success 200
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
-// @Router /groups/users/remove [post]
+// @Router /group/member/remove [post]
 func (gh *groupHandler) RemoveUserFromGroup(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*utils.Claims)
@@ -211,4 +214,74 @@ func (gh *groupHandler) RemoveUserFromGroup(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to remove user from group")
 	}
 	return ctx.NoContent(http.StatusOK)
+}
+
+// DeleteGroup godoc
+// @Summary Delete a group
+// @Description Delete a specific group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Success 204
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /group/delete [post]
+func (gh *groupHandler) DeleteGroup(ctx echo.Context) error {
+	var req struct {
+		GroupID uuid.UUID `json:"group_id"`
+	}
+	if err := ctx.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
+	}
+	err := gh.gu.DeleteGroup(req.GroupID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to delete group")
+	}
+	return ctx.NoContent(http.StatusOK)
+}
+
+// GetGroupDetails godoc
+// @Summary Get group details
+// @Description Get the details of a specific group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path string true "Group ID"
+// @Success 200 {object} model.Group
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /group/{id}/details [get]
+func (gh *groupHandler) GetGroupDetails(ctx echo.Context) error {
+	groupID, err := uuid.Parse(ctx.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid group ID")
+	}
+	group, err := gh.gu.GetGroupDetails(groupID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to get group details")
+	}
+	return ctx.JSON(http.StatusOK, group)
+}
+
+// GetGroupMembers godoc
+// @Summary Get group members
+// @Description Get the members of a specific group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path string true "Group ID"
+// @Success 200 {array} model.User
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /group/{id}/members [get]
+func (gh *groupHandler) GetGroupMembers(ctx echo.Context) error {
+	groupID, err := uuid.Parse(ctx.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid group ID")
+	}
+	members, err := gh.gu.GetGroupMembers(groupID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to get group members")
+	}
+	return ctx.JSON(http.StatusOK, members)
 }
