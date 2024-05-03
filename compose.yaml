@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./db/Dockerfile
     ports:
-      - "5433:5432"
+      - "5400:5432"
     env_file:
       - ./db/.env
     container_name: postgres
@@ -33,7 +33,7 @@ services:
       context: .
       dockerfile: ./backend/user_management_service/Dockerfile
     ports:
-      - "8888:8080"
+      - "8001:8080"
     volumes:
       - ./backend/user_management_service:/api
     env_file:
