@@ -67,7 +67,75 @@ definitions:
 info:
   contact: {}
 paths:
-  /groups:
+  /group/{id}/details:
+    get:
+      consumes:
+      - application/json
+      description: Get the details of a specific group
+      parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Group'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get group details
+      tags:
+      - Group
+  /group/{id}/members:
+    get:
+      consumes:
+      - application/json
+      description: Get the members of a specific group
+      parameters:
+      - description: Group ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get group members
+      tags:
+      - Group
+  /group/create:
     post:
       consumes:
       - application/json
@@ -94,7 +162,32 @@ paths:
       summary: Create a new group
       tags:
       - Group
-  /groups/invitations/{invitationID}/accept:
+  /group/delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete a specific group
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a group
+      tags:
+      - Group
+  /group/invitation/accept:
     post:
       consumes:
       - application/json
@@ -125,38 +218,7 @@ paths:
       summary: Accept a group invitation
       tags:
       - Group
-  /groups/invitations/{invitationID}/cancel:
-    post:
-      consumes:
-      - application/json
-      description: Cancel a pending group invitation
-      parameters:
-      - description: Invitation ID
-        in: path
-        name: invitationID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Cancel a group invitation
-      tags:
-      - Group
-  /groups/invitations/{invitationID}/reject:
+  /group/invitation/reject:
     post:
       consumes:
       - application/json
@@ -187,7 +249,7 @@ paths:
       summary: Reject a group invitation
       tags:
       - Group
-  /groups/invite:
+  /group/invite:
     post:
       consumes:
       - application/json
@@ -214,7 +276,7 @@ paths:
       summary: Invite a user to a group
       tags:
       - Group
-  /groups/users/remove:
+  /group/member/remove:
     post:
       consumes:
       - application/json
@@ -239,9 +301,42 @@ paths:
       summary: Remove a user from a group
       tags:
       - Group
-  /users/refresh:
+  /grous/invitation/cancel:
     post:
-      description: Generate a new access token using a refresh token
+      consumes:
+      - application/json
+      description: Cancel a pending group invitation
+      parameters:
+      - description: Invitation ID
+        in: path
+        name: invitationID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cancel a group invitation
+      tags:
+      - Group
+  /password/reset:
+    post:
+      consumes:
+      - application/json
+      description: Reset user password using a reset token
       produces:
       - application/json
       responses:
@@ -251,16 +346,22 @@ paths:
             additionalProperties:
               type: string
             type: object
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             additionalProperties:
               type: string
             type: object
-      summary: Refresh access token
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reset password
       tags:
       - User
-  /users/reset-password:
+  /password/reset/request:
     post:
       consumes:
       - application/json
@@ -289,7 +390,28 @@ paths:
       summary: Request password reset
       tags:
       - User
-  /users/signin:
+  /refresh:
+    post:
+      description: Generate a new access token using a refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Refresh access token
+      tags:
+      - User
+  /signin:
     post:
       consumes:
       - application/json
@@ -325,7 +447,7 @@ paths:
       summary: Sign in a user
       tags:
       - User
-  /users/signup:
+  /signup:
     post:
       consumes:
       - application/json
