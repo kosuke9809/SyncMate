@@ -17,13 +17,6 @@ func NewMiddleware(e *echo.Echo) *echo.Echo {
 		AllowMethods:     []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE},
 		AllowCredentials: true,
 	}))
-	// e.Use(echojwt.WithConfig(
-	// 	echojwt.Config{
-	// 		SigningKey:  []byte(os.Getenv("SECRET_KEY")),
-	// 		TokenLookup: "header: Authorization",
-	// 		ContextKey:  "claims",
-	// 	},
-	// ))
 	return e
 }
 
