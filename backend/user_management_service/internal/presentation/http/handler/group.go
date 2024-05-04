@@ -6,7 +6,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/kosuke9809/SyncMate/internal/usecase"
-	"github.com/kosuke9809/SyncMate/internal/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -42,8 +41,8 @@ func NewGroupHandler(gu usecase.IGroupUsecase) IGroupHandler {
 // @Router /group/create [post]
 func (gh *groupHandler) CreateNewGroup(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.Claims)
-	creatorID, err := uuid.Parse(claims.UserID)
+	claims := user.Claims.(jwt.MapClaims)
+	creatorID, err := uuid.Parse(claims["user_id"].(string))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to parse user ID")
 	}
@@ -73,8 +72,8 @@ func (gh *groupHandler) CreateNewGroup(ctx echo.Context) error {
 // @Router /group/invite [post]
 func (gh *groupHandler) InviteUserToGroup(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.Claims)
-	inviterID, err := uuid.Parse(claims.UserID)
+	claims := user.Claims.(jwt.MapClaims)
+	inviterID, err := uuid.Parse(claims["user_id"].(string))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to parse user ID")
 	}
@@ -105,8 +104,8 @@ func (gh *groupHandler) InviteUserToGroup(ctx echo.Context) error {
 // @Router /group/invitation/accept [post]
 func (gh *groupHandler) AcceptInvitation(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.Claims)
-	inviteeID, err := uuid.Parse(claims.UserID)
+	claims := user.Claims.(jwt.MapClaims)
+	inviteeID, err := uuid.Parse(claims["user_id"].(string))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to parse user ID")
 	}
@@ -116,7 +115,7 @@ func (gh *groupHandler) AcceptInvitation(ctx echo.Context) error {
 	if err := ctx.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
-	err = gh.gu.AcceptInvitation(inviteeID, req.InvitationID)
+	err = gh.gu.AcceptInvitation(req.InvitationID, inviteeID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to accept invitation")
 	}
@@ -136,8 +135,8 @@ func (gh *groupHandler) AcceptInvitation(ctx echo.Context) error {
 // @Router /group/invitation/reject [post]
 func (gh *groupHandler) RejectInvitation(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.Claims)
-	inviteeID, err := uuid.Parse(claims.UserID)
+	claims := user.Claims.(jwt.MapClaims)
+	inviteeID, err := uuid.Parse(claims["user_id"].(string))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to parse user ID")
 	}
@@ -147,7 +146,7 @@ func (gh *groupHandler) RejectInvitation(ctx echo.Context) error {
 	if err := ctx.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
-	err = gh.gu.RejectInvitation(inviteeID, req.InvitationID)
+	err = gh.gu.RejectInvitation(req.InvitationID, inviteeID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to reject invitation")
 	}
@@ -167,8 +166,8 @@ func (gh *groupHandler) RejectInvitation(ctx echo.Context) error {
 // @Router /grous/invitation/cancel [post]
 func (gh *groupHandler) CancelInvitation(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.Claims)
-	inviterID, err := uuid.Parse(claims.UserID)
+	claims := user.Claims.(jwt.MapClaims)
+	inviterID, err := uuid.Parse(claims["user_id"].(string))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to parse user ID")
 	}
@@ -178,7 +177,7 @@ func (gh *groupHandler) CancelInvitation(ctx echo.Context) error {
 	if err := ctx.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request data")
 	}
-	err = gh.gu.CancelInvitation(inviterID, req.InvitationID)
+	err = gh.gu.CancelInvitation(req.InvitationID, inviterID)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to cancel invitation")
 	}
@@ -197,8 +196,8 @@ func (gh *groupHandler) CancelInvitation(ctx echo.Context) error {
 // @Router /group/member/remove [post]
 func (gh *groupHandler) RemoveUserFromGroup(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.Claims)
-	inviterID, err := uuid.Parse(claims.UserID)
+	claims := user.Claims.(jwt.MapClaims)
+	inviterID, err := uuid.Parse(claims["user_id"].(string))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to parse user ID")
 	}

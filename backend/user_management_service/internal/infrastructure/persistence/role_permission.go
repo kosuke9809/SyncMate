@@ -16,7 +16,7 @@ func NewRolePermissionPersistence(db *gorm.DB) repository.IRolePermissionReposit
 
 func (rpp *rolePermissionPersistence) HasPermission(roleID, permissionID uint) (bool, error) {
 	var c int64
-	err := rpp.db.Table("role_permission").Where("role_id = ? AND permission_id = ?", roleID, permissionID).Count(&c).Error
+	err := rpp.db.Table("role_permissions").Where("role_id = ? AND permission_id = ?", roleID, permissionID).Count(&c).Error
 	if err != nil {
 		return false, err
 	}

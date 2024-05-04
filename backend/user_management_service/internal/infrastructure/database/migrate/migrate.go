@@ -15,7 +15,7 @@ func AutoMigrate() {
 	}
 	defer fmt.Println("Suceessfully migrated the database")
 	defer database.CloseDB(dbConn)
-	if err := dbConn.AutoMigrate(&model.User{}, &model.Group{}, &model.UserGroup{}, &model.Profile{}, &model.Role{}, &model.Permission{}); err != nil {
+	if err := dbConn.AutoMigrate(&model.User{}, &model.Group{}, &model.UserGroup{}, &model.Profile{}, &model.Role{}, &model.Permission{}, &model.Invitation{}); err != nil {
 		panic(err)
 	}
 }
