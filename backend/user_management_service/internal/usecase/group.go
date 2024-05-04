@@ -63,33 +63,34 @@ func (gu *groupUsecase) InviteUserToGroup(inviterID, groupID uuid.UUID, inviteeE
 	// email -> user
 	invitee, err := gu.us.FindByEmail(inviteeEmail)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("user not found")
 	}
 	// check inviter is a member of the group
 	isMember, err := gu.ugs.IsUserInGroup(invitee.ID, groupID)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to check if inviter is a member of the group")
 	}
-	if !isMember {
-		return nil, errors.New("inviter is not a member of the group")
+	if isMember {
+		return nil, errors.New("invitee is already a member of the group")
 	}
 	// check inviter role in the group
 	inviterRole, err := gu.ugs.FindUserRoleInGroup(inviterID, groupID)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to check inviter role in the group")
 	}
 	// check inviter has permission to invite users to the group
 	ok, err := gu.rps.HasPermission(inviterRole.ID, "ManageGroupMembers")
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to check if inviter has permission to invite users to the group")
 	}
+
 	if !ok {
 		return nil, errors.New("inviter does not have permission to invite users to the group")
 	}
 	// check invitee is not a member of the group
 	isMember, err = gu.ugs.IsUserInGroup(invitee.ID, groupID)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to check if invitee is a member of the group")
 	}
 	if isMember {
 		return nil, errors.New("invitee is already a member of the group")
@@ -97,7 +98,7 @@ func (gu *groupUsecase) InviteUserToGroup(inviterID, groupID uuid.UUID, inviteeE
 	// create invitation
 	invitation, err := gu.is.SendInvitation(groupID, invitee.ID, inviterID)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to send invitation")
 	}
 	return invitation, nil
 }

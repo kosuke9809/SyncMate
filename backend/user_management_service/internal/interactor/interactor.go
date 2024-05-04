@@ -125,6 +125,7 @@ func (i *interactor) NewRolePermissionService() service.IRolePermissionService {
 	return service.NewRolePermissionService(
 		i.NewRolePermissionPersistence(),
 		i.NewRolePersistence(),
+		i.NewPermissionPersistence(),
 	)
 }
 

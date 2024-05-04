@@ -18,6 +18,7 @@ func NewInvitationPersistence(db *gorm.DB) repository.IInvitationRepository {
 }
 
 func (ip *invitationPersistence) Create(invitation *model.Invitation) error {
+	invitation.ID = uuid.New()
 	invitation.CreatedAt = time.Now()
 	invitation.UpdatedAt = time.Now()
 	err := ip.db.Create(invitation).Error
