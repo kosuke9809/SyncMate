@@ -56,7 +56,7 @@ func (uu *userUsecase) RefreshAccessToken(refreshToken string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	newAccessToken, err := utils.GenerateToken(claims.UserID, 30)
+	newAccessToken, err := utils.GenerateToken(claims["user_id"].(string), 30)
 	if err != nil {
 		return "", err
 	}

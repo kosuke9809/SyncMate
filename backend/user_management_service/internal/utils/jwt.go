@@ -1,16 +1,12 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
-
-type Claims struct {
-	UserID string `json:"user_id"`
-	jwt.RegisteredClaims
-}
 
 var secretKey []byte
 
@@ -20,16 +16,15 @@ func init() {
 		panic("SECRET_KEY is not set")
 	}
 	secretKey = []byte(secretKeyString)
+	fmt.Println("Secret key is set")
 }
 
 func GenerateToken(userID string, durationInMinutes time.Duration) (string, error) {
-	claims := Claims{
-		UserID: userID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(durationInMinutes * time.Minute)),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": userID,
+		"exp":     time.Now().Add(time.Minute * durationInMinutes).Unix(),
+		"iss":     "syncmate",
+	})
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
@@ -38,10 +33,8 @@ func GenerateToken(userID string, durationInMinutes time.Duration) (string, erro
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) (*Claims, error) {
-	claims := &Claims{}
-
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+func VerifyToken(tokenString string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
@@ -50,8 +43,13 @@ func VerifyToken(tokenString string) (*Claims, error) {
 	if err != nil {
 		return nil, err
 	}
-	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims, nil
+	if !token.Valid {
+		return nil, jwt.ErrSignatureInvalid
 	}
-	return nil, jwt.ErrSignatureInvalid
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, jwt.ErrSignatureInvalid
+	}
+	return claims, nil
+
 }
