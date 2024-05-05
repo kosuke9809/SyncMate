@@ -34,7 +34,44 @@ SyncMate共同生活に役立つ機能を提供します．各機能はマイク
 - フロントエンド
   - TypeScript, React, Next.js, Chakura UI
 - インフラ
-  - Terraform, Vercel, k8s 未定
+  - Terraform, Vercel, k8s? 未定
+- CI/CD
+  - GitHub Actions, PipeCD? 未定
 
 ## アーキテクチャ
+### システムアーキテクチャ
+BFFアーキテクチャを採用．バックエンドAPIはマイクロサービスとして分割しフロントエンドとの中間としてAPI Gatewayを配置する．
 ![システムアーキテクチャ](./image/architecture.png?raw=true)
+
+### バックエンドアーキテクチャ
+各APIで様々なアーキテクチャを採用する想定．（学習目的）
+ユーザーグループ管理サービスではオニオンアーキテクチャを採用
+```
+├── cmd
+│   ├── api
+│   ├── initialization
+│   └── migration
+├── docs
+└── internal
+    ├── domain
+    │   ├── model
+    │   ├── repository
+    │   └── service
+    ├── infrastructure
+    │   ├── database
+    │   │   ├── initialize
+    │   │   │   └── sql
+    │   │   ├── migrate
+    │   │   └── postgres
+    │   └── persistence
+    ├── interactor
+    ├── presentation
+    │   └── http
+    │       ├── handler
+    │       ├── middleware
+    │       └── router
+    ├── usecase
+    │   └── mocks
+    └── utils
+
+```
