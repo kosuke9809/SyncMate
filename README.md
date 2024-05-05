@@ -37,4 +37,4 @@ SyncMate共同生活に役立つ機能を提供します．各機能はマイク
   - Terraform, Vercel, k8s 未定
 
 ## アーキテクチャ
-![システムアーキテクチャ]("https://github.com/kosuke9809/SyncMate/blob/develop/image/architecture.png")
+![システムアーキテクチャ](./image/architecture.png?raw=true)
