@@ -1,16 +1,4 @@
 services:
-  db:
-    build:
-      context: .
-      dockerfile: ./db/Dockerfile
-    ports:
-      - "5400:5432"
-    env_file:
-      - ./db/.env
-    container_name: postgres
-    restart: always
-    networks:
-      - backend-network
   frontend:
     build:
       context: .
@@ -28,6 +16,30 @@ services:
       - backend-user-management-service
     networks:
       - frontend-network
+  user-db:
+    build:
+      context: .
+      dockerfile: ./db/user/Dockerfile
+    ports:
+      - "5401:5432"
+    env_file:
+      - ./db/user/.env
+    container_name: user-postgres
+    restart: always
+    networks:
+      - backend-network
+  cost-db:
+    build:
+      context: .
+      dockerfile: ./db/cost/Dockerfile
+    ports:
+      - "5402:5432"
+    env_file:
+      - ./db/cost/.env
+    container_name: cost-postgres
+    restart: always
+    networks:
+      - backend-network
   backend-user-management-service:
     build:
       context: .
@@ -41,7 +53,24 @@ services:
     container_name: user-management-service-api
     restart: always
     depends_on:
-      - db
+      - user-db
+    networks:
+      - backend-network
+      - frontend-network
+  backend-cost-management-service:
+    build:
+      context: .
+      dockerfile: ./backend/cost_management_service/Dockerfile
+    ports:
+      - "8002:8080"
+    volumes:
+      - ./backend/cost_management_service:/api
+    env_file:
+      - ./backend/cost_management_service/.env
+    container_name: cost-management-service-api
+    restart: always
+    depends_on:
+      - cost-db
     networks:
       - backend-network
       - frontend-network
